@@ -1,0 +1,31 @@
+version: "3"
+services:
+  # this service configures the react app
+  web:
+    # this environment variable needed to auto-refresh content
+    environment:
+      - CHOKIDAR_USEPOLLING=true
+    # this stdin_open is needed to clear bug of react app
+    stdin_open: true
+    # point to the Dockerfile.dev in order to buid the image
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    ports:
+      - "3000:3000"
+    volumes:
+      # use the node_modules in docker container without looking
+      # for one such dir in the current dir
+      - /app/node_modules
+      # map curr directory with /app dir in the docker container
+      - .:/app
+  # this service configures the test suite
+  tests:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    volumes:
+      - /app/node_modules
+      - .:/app
+    # this will override the start command with "test"
+    command: ["npm", "run", "test"]
