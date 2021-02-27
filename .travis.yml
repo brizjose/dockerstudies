@@ -17,4 +17,16 @@ before_install:
 script:
   # - docker run brizjose/dockerstudies npm run test -- --coverage
   - docker run -e CI=true brizjose/dockerstudies npm run test -- --coverage
+
 # tell travis how to deploy our code to aws
+deploy:
+  provider: elasticbeanstalk
+  region: "us-east-1"
+  app: "dockerstudies"
+  env: "Dockerstudies-env"
+  bucket_name: "elasticbeanstalk-us-east-1-065017652945"
+  bucket_path: "dockerstudies"
+  on:
+    branch: master
+  access_key_id: $AWS_ACCESS_KEY
+  secret_access_key: $AWS_SECRET_KEY
