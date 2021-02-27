@@ -1,0 +1,20 @@
+language: generic
+
+sudo: required
+
+# tell travis we need a copy of docker runing
+services:
+  - docker
+
+# build out image usind dockerfile
+# notice we tag brizjose/[name of github repository] to make
+# the image name match the github repo name so they are
+# aligned and easier to manage and track
+before_install:
+  - docker build -t brizjose/dockerstudies -f Dockerfile.dev .
+
+# tell travis how to run our test suite
+script:
+  # - docker run brizjose/dockerstudies npm run test -- --coverage
+  - docker run -e CI=true brizjose/dockerstudies npm run test -- --coverage
+# tell travis how to deploy our code to aws
